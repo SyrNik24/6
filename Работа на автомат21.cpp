@@ -291,7 +291,7 @@ void gamecase()          // Игра меню
             num1 = rand() % 30;
         mas[num1] = i + 1;
     }
-    for (int i = 0; i < 4; i++)     // выведение 30 не повторящихся вариантов ответа
+    for (int i = 0; i < 4; i++)     // выведение повторящихся вариантов ответа
     {
         num2 = rand() % 4;
         while (mas1[num2])
@@ -563,10 +563,10 @@ void endcase() {
     } while (num0 != '1' && num0 != '2');
     switch (num0)
     {
-    case 1:
+    case '1':
         system("cls");
         break;
-    case 2:
+    case '2':
         exitcase();
         break;
     }
