@@ -22,7 +22,7 @@ void ans3();
 void ans4();
 
 char num0;  // для switch
-int difficulty = 1; //сложность
+int difficulty = 20; //сложность
 int num1, num2, num3; // в 30 не повторяющихся чисел
 double num4;//для времени
 int mas[30]; // массив из 30 вопросов
