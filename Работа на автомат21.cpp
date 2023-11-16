@@ -11,6 +11,7 @@ void exitcase();
 void rulescase();
 void gamecase();
 void check();
+void answnum();
 void ansfor();
 void ansif();
 void ans12();
@@ -21,25 +22,25 @@ void ans3();
 void ans4();
 
 char num0;  // для switch
-int difficulty = 20; //сложность
-int num1,num2; // в 30 не повторяющихся чисел
+int difficulty = 1; //сложность
+int num1, num2, num3; // в 30 не повторяющихся чисел
+double num4;//для времени
 int mas[30]; // массив из 30 вопросов
 int clue = 1; // подсказка
 int life = 3; //жизни
 int gametime = 600;//время
 int answer; //ответ пользователя
-int answer1;//ответ пользователя приравненный к массиву в форе
+int answer1;//ответ пользователя приравненный к массиву в фор
 int Beginning_Time = 0;//Начало отсчета
 int Ending_Time = 0; //Переменная для значения времени окончания работы одного бланка
 int Result_Time = 0;//Для результата времени
-int num3;//для перемешивания вариантов ответа
 int mas1[4];//для выведения вариантов ответа 
 int mas2[4];//для определения вариантов ответа
-string question,numq, answ1, answ2, answ3, answ4;
+string question, numq, answ1, answ2, answ3, answ4;
 
 HANDLE hConsole;
 
-enum Color { Green = 2, Red = 4, White = 15};
+enum Color { Green = 2, Red = 4, White = 15, Black = 0 };
 int main()
 {
     setlocale(0, "");
@@ -165,52 +166,17 @@ void nastroykicase()
         break;
     case '4':
         cout << "[+] Настройки:\n\n";
-        cout << "[+] Время на викторину\n";
-        cout << "[1] 2 минуты\n";
-        cout << "[2] 3 минуты\n";
-        cout << "[3] 4 минуты\n";
-        cout << "[4] 5 минут\n";
-        cout << "[5] 6 минут\n";
-        cout << "[6] 7 минут\n";
-        cout << "[7] 8 минут\n";
-        cout << "[8] 9 минут\n";
-        cout << "[9] 10 минут\n\n";
+        cout << "[+] Время на викторину от 2 до 10 минут (Пример записи: 3.30-3 минуты 30 секунд)";
         do {
-            cout << "[+] Введите нужный вам пункт:";
-            cin >> num0;
-            if (num0 != '1' && num0 != '2' && num0 != '3' && num0 != '4' && num0 != '5' && num0 != '6' && num0 != '7' && num0 != '8' && num0 != '9') {
-                cout << endl << "[!] Вы ввели некорректные данные!" << endl;
+            cout << endl << "[+] Введите ваше время на викторину:";
+            cin >> num4;
+            if (num4 < 2 || num4>10) {
+                cout << endl << "[!] Вы ввели некорректные данные!";
             }
-        } while (num0 != '1' && num0 != '2' && num0 != '3' && num0 != '4' && num0 != '5' && num0 != '6' && num0 != '7' && num0 != '8' && num0 != '9');
-        switch (num0) {
-        case '1':
-            gametime = 120;
-            break;
-        case '2':
-            gametime = 180;
-            break;
-        case '3':
-            gametime = 240;
-            break;
-        case '4':
-            gametime = 300;
-            break;
-        case '5':
-            gametime = 360;
-            break;
-        case '6':
-            gametime = 420;
-            break;
-        case '7':
-            gametime = 480;
-            break;
-        case '8':
-            gametime = 540;
-            break;
-        case '9':
-            gametime = 600;
-            break;
-        }
+        } while (num4 < 2 || num4>10);
+        num1 = num4; //минуты
+        num4 = (num4 - num1) * 100; //секунды
+        gametime = (num1 * 60) + num4;
         nastroykicase();
         break;
     case '5':
@@ -225,25 +191,11 @@ void rulescase()
     cout << "[2] При запуске игры выводятся разные вопросы из возможных 30(какой именно подписывается на вопросе)" << endl;
     cout << "[3] Вам нужно выбрать правильный ответ из 4 вариантов ответа данных вам" << endl;
     cout << "[4] Вы можете использовать только " << clue << " подсказку для отсеивания двух вариантов ответа" << endl;
-    cout << "[5] У вас есть только " << life << " жизни и " << gametime / 60 << " минут / " << gametime << " секунд" << endl;
-    cout << "[6] Удачи в прохождении викторины!" << endl << endl;
-    cout << "1] Вернуться в меню\n";
-    cout << "2] Выход\n\n";
-    do {
-        cout << "Выберете нужный вам пункт:";
-        cin >> num0;
-        if (num0 != '1' && num0 != '2') {
-            cout << endl << "[!] Вы ввели некорректные данные!" << endl;
-        }
-    } while (num0 != '1' && num0 != '2');
-    switch (num0) {
-    case '1':
-        main();
-        break;
-    case '2':
-        exitcase();
-        break;
-    }
+    cout << "[5] У вас есть только " << life << " жизни" << endl;
+    cout << "[6] Времени в общем " << (gametime - (Ending_Time / 1000)) / 60 << ":" << (gametime - (Ending_Time / 1000)) - (((gametime - (Ending_Time / 1000)) / 60) * 60) << endl;
+    cout << "[+] Удачи в прохождении викторины!" << endl << endl;
+    system("pause");
+    main();
 }
 void exitcase()
 {
@@ -259,7 +211,7 @@ void check()
     Ending_Time = clock();
     Result_Time = Ending_Time - Beginning_Time;
     if ((gametime - (Ending_Time / 1000) / 60) > 0 && (gametime - (Ending_Time / 1000)) - (((gametime - (Ending_Time / 1000)) / 60) * 60) > 0) {
-        cout << "[+] Времени осталось: " << (gametime - (Ending_Time / 1000)) / 60 << ":" << (gametime - (Ending_Time / 1000))- (((gametime - (Ending_Time / 1000)) / 60)*60) << endl;
+        cout << "[+] Времени осталось: " << (gametime - (Ending_Time / 1000)) / 60 << ":" << (gametime - (Ending_Time / 1000)) - (((gametime - (Ending_Time / 1000)) / 60) * 60) << endl;
     }
     else {
         cout << "[+] Времени осталось: 0:0" << endl;
@@ -301,7 +253,7 @@ void gamecase()          // Игра меню
     for (int i = 0; i < difficulty; i++)
     {                                          //Главный фор
         system("cls");
-        num3 = i+1;
+        num3 = i + 1;
         if (mas[i] == 1) {
             question = "\tКакая команда должна быть после окончания case?";
             answ1 = "switch";
@@ -547,8 +499,48 @@ void gamecase()          // Игра меню
 
     }
     system("cls");
-    cout << "[!] УРА! Вы выйграли!" << endl;
+    cout << "[!] Поздравляем! Вы выиграли!" << endl;
+    cout << "      + + + + + + + + + + +\n";
+    cout << "+ + + +                   + + + +\n";
+    cout << "+     +                   +     +\n";
+    cout << "+     +                   +     +\n";
+    cout << "+ +   +                   +   + +\n";
+    cout << "  + + +                   + + +\n";
+    cout << "      +                   +\n";
+    cout << "      + +               + + \n";
+    cout << "        + +           + +\n";
+    cout << "          + +       + +\n";
+    cout << "              +   +\n";
+    cout << "              +   +\n";
+    cout << "              +   +\n";
+    cout << "            + +   + +\n";
+    cout << "          +           +\n";
+    cout << "          + + + + + + +\n";
     _getch();
+}
+void answnum() {
+    do {
+        cout << "Введите ваш ответ:";
+        cin >> num0;
+        if (num0 != '1' && num0 != '2' && num0 != '3' && num0 != '4' && num0 != '5') {
+            cout << endl << "[!] Вы ввели некорректные данные!" << endl;
+        }
+    } while (num0 != '1' && num0 != '2' && num0 != '3' && num0 != '4' && num0 != '5');
+    if (num0 == '1') {
+        answer = 1;
+    }
+    else if (num0 == '2') {
+        answer = 2;
+    }
+    else if (num0 == '3') {
+        answer = 3;
+    }
+    else if (num0 == '4') {
+        answer = 4;
+    }
+    else if (num0 == '5') {
+        answer = 5;
+    }
 }
 void ansfor()
 {
@@ -572,9 +564,8 @@ void ansfor()
             cout << "[" << i + 1 << "] " << answ4 << endl;
         }
     }
-    cout << endl<<"[5] Подсказка 50/50" << endl<<endl;
-    cout << "Введите ваш ответ:";
-    cin >> answer;
+    cout << endl << "[5] Подсказка 50/50" << endl << endl;
+    answnum();
 }
 void ansif()
 {
@@ -617,13 +608,13 @@ void ans12() {
     }
     SetConsoleTextAttribute(hConsole, White);
     cout << endl << "[5] Подсказка 50/50" << endl << endl;
-    do {
-        cout << "Введите ваш ответ:";
-        cin >> answer;
-        if (answer == 5) {
-            cout << endl << "[!] Вы не  можете использовать подсказку дважды!" << endl;
-        }
-    } while (answer == 5);
+    answnum();
+    if (answer == 5) {
+        do {
+            cout << endl << "[!] Вы не можете использовать подсказку дважды!" << endl;
+            answnum();
+        } while (answer == 5);
+    }
 }
 void ans34() {
 
@@ -651,13 +642,13 @@ void ans34() {
     }
     SetConsoleTextAttribute(hConsole, White);
     cout << endl << "[5] Подсказка 50/50" << endl << endl;
-    do {
-        cout << "Введите ваш ответ:";
-        cin >> answer;
-        if (answer == 5) {
-            cout << endl << "[!] Вы не  можете использовать подсказку дважды!" << endl;
-        }
-    } while (answer == 5);
+    answnum();
+    if (answer == 5) {
+        do {
+            cout << endl << "[!] Вы не можете использовать подсказку дважды!" << endl;
+            answnum();
+        } while (answer == 5);
+    }
 }
 void ans1() {
     ansfor();
@@ -671,7 +662,7 @@ void ans1() {
     else if (answer == 5 && clue == 0) {
         do {
             cout << endl << endl << "[!] У вас кончились подсказки! Введите свой ответ:";
-            cin >> answer;
+            answnum();
         } while (answer == 5);
     }
     system("cls");
@@ -725,7 +716,7 @@ void ans2()
     else if (answer == 5 && clue == 0) {
         do {
             cout << endl << endl << "[!] У вас кончились подсказки! Введите свой ответ:";
-            cin >> answer;
+            answnum();
         } while (answer == 5);
     }
     system("cls");
@@ -779,7 +770,7 @@ void ans3()
     else if (answer == 5 && clue == 0) {
         do {
             cout << endl << endl << "[!] У вас кончились подсказки! Введите свой ответ:";
-            cin >> answer;
+            answnum();
         } while (answer == 5);
     }
     system("cls");
@@ -832,7 +823,7 @@ void ans4() {
     else if (answer == 5 && clue == 0) {
         do {
             cout << endl << endl << "[!] У вас кончились подсказки! Введите свой ответ:";
-            cin >> answer;
+            answnum();
         } while (answer == 5);
     }
     system("cls");
