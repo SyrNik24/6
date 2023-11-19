@@ -7,45 +7,133 @@
 using namespace std;
 
 void nastroykicase();
-void exitcase();
 void rulescase();
 void gamecase();
 void check();
 void answnum();
-void ansfor();
-void ansif();
-void ans12();
-void ans34();
-void ans1();
-void ans2();
-void ans3();
-void ans4();
 
 char num0;  // для switch
 int difficulty = 20; //сложность
 int num1, num2, num3; // в 30 не повторяющихся чисел
 double num4;//для времени
+int num5;
 int mas[30]; // массив из 30 вопросов
 int clue = 1; // подсказка
 int life = 3; //жизни
 int gametime = 600;//время
 int answer; //ответ пользователя
-int answer1;//ответ пользователя приравненный к массиву в фор
+bool answer1[4]{false,false,false,false};//ответ пользователя приравненный к массиву в фор
+bool answers=true;
 int Beginning_Time = 0;//Начало отсчета
 int Ending_Time = 0; //Переменная для значения времени окончания работы одного бланка
 int Result_Time = 0;//Для результата времени
 int mas1[4];//для выведения вариантов ответа 
-int mas2[4];//для определения вариантов ответа
-string question, numq, answ1, answ2, answ3, answ4;
-
+string mas2[4];
 HANDLE hConsole;
+string Question[30]{
+"\t Какая команда должна быть после окончания case?",
+"\t Какую команду мы используем для вывода на консоль?",
+"\t Какие знаки используются с командой cin?" ,
+"\t Какие знаки используются с командой cout?" ,
+"\t Какие знаки используются в цикле if для обозначения \"ИЛИ\"?",
+"\t Какие знаки используются в цикле if для обозначения \"И\"?" ,
+"\t Какие знаки используются для вывода текста на консоль?" ,
+"\t Какие знаки используются для комментария в коде?" ,
+"\t Какие знаки используются для условия в цикле for?",
+"\t Какие знаки используются после обозначения условий в цикле for?",
+"\t Какие знаки используются чтобы обозначить массив?",
+"\t Какую команду мы используем ввода с консоли?",
+"\t Какую команду мы используем для установки ширины поля?",
+"\t Какую команду мы используем для вписывания в переменную текст?",
+"\t Что делает команда endl?",
+"\t Что делает команда end(0)?",
+"\t Что делает команда \\t?",
+"\t \"cin<<num1;\"-в чем ошибка?" ,
+"\t Для чего используется команда _getch?" ,
+"\t Для чего используется команда system(\"pause\")?" ,
+"\t Для чего используется команда system(\"cls\")?" ,
+"\t Для чего используется команда clock()?" ,
+"\t Для чего используется команда rand?" ,
+"\t Для чего используется команда setlocale?" ,
+"\t Для чего используется команда switch?" ,
+"\t Для чего используется команда break?" ,
+"\t Для чего используется команда return?" ,
+"\t Для чего используется using namespace std?" ,
+"\t Какое полное название колледжа?" ,
+"\t Полное ФИО преподавателя по Системному программированию в 2ИП-1?"
+};
+string Answers[30][4]{
+    {"switch","default","break", "end"}, //1.3
+    {"cin","cout","setw","string"}, //2.2
+    {">>","||","&&","<<"}, //3.1
+    {">>","||","&&","<<"}, //4.4
+    {">>","||","&&","<<"}, //5.2
+    {">>","||","&&","<<"}, //6.3
+    {"//","\"\"","()","{}"}, //7.2
+    {"//","[]","()","{}"}, //8.1
+    {"//","[]","()","{}"}, //9.3
+    {"//","[]","()","{}"}, //10.4
+    {"//","[]","()","{}"}, //11.2
+    {"cin","cout","setw","string"}, //12.1
+    {"cin","cout","setw","string"}, //13.3
+    {"cin","cout","setw","string"}, //14.4
+    {"Заканчивает программу","Делает пробел","Делает отступ","Переходит на следующую строку"}, //15.4
+    {"Заканчивает программу","Делает пробел","Делает отступ","Переходит на следующую строку"}, //16.1
+    {"Заканчивает программу","Делает пробел","Делает отступ","Переходит на следующую строку"}, //17.3
+    {"Должен быть один знак <","Нет такой команды cin","<< повернуты не в ту сторону","точка с запятой не нужна"}, //18.3
+    {"Ставит код на паузу","Ставит код на паузу выводя текст при этом","Делает рандомайзер чисел","Используется для времени в коде"}, //19.1
+    {"Ставит код на паузу","Ставит код на паузу выводя текст при этом","Делает рандомайзер чисел","Используется для времени в коде"}, //20.2
+    {"Ставит код на паузу","Очищает консоль","Делает рандомайзер чисел","Используется для времени в коде"}, //21.2
+    {"Ставит код на паузу","Очищает консоль","Делает рандомайзер чисел","Используется для времени в коде"}, //22.4
+    {"Ставит код на паузу","Очищает консоль","Делает рандомайзер чисел", "Локализовывает текст"}, //23.3
+    {"Осуществляет выбор пользователя","Прерывает выполнение кода","Делает рандомайзер чисел","Локализовывает текст"}, //24.4
+    {"Осуществляет выбор пользователя","Прерывает выполнение кода","Делает рандомайзер чисел","Локализовывает текст"}, //25.1
+    {"Для возращения данных","Прерывает выполнение кода","Делает рандомайзер чисел","Для вывода значений"}, //26.2
+    {"Для возращения данных","Прерывает выполнение кода","Делает рандомайзер чисел","Для вывода значений"}, //27.1
+    {"Для возращения данных","Прерывает выполнение кода","Делает рандомайзер чисел","Для вывода значений"}, //28.4
+    {"Морской Авиомоторный Дорожный Колледж","Московский Автомобильный Дорожный Колледж","Московский Автомобильно Дорожный Колледж","Московский Авиалетный Дорогой Колледж"}, //29.3
+    {"Семенова Екатерина Владимировна","Семеновна Елена Викторовна","Семенова Анна Александровна","Семеновна Екатерина Владимировна"} //30.1
+};
+string Correct[30]{
+    "break",
+    "cout",
+    ">>",
+    "<<",
+    "||",
+    "&&",
+    "\"\"",
+    "//",
+    "()",
+    "{}",
+    "[]",
+    "cin",
+    "setw",
+    "string",
+    "Переходит на следующую строку",
+    "Заканчивает программу",
+    "Делает отступ",
+    "<< повернуты не в ту сторону",
+    "Ставит код на паузу",
+    "Ставит код на паузу выводя текст при этом",
+    "Очищает консоль",
+    "Используется для времени в коде",
+    "Делает рандомайзер чисел",
+    "Локализовывает текст",
+    "Осуществляет выбор пользователя",
+    "Прерывает выполнение кода",
+    "Для возращения данных",
+    "Для вывода значений",
+    "Московский Автомобильно Дорожный Колледж",
+    "Семенова Екатерина Владимировна"
+};
 
-enum Color { Green = 2, Red = 4, White = 15, Black = 0 };
+enum Color { Green = 2, Red = 4, White = 15 };
 int main()
 {
     setlocale(0, "");
     system("cls");
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
     cout << "Игра викторина :)\n\n";
     cout << "1. Правила\n";
     cout << "2. Настройки\n";
@@ -72,7 +160,10 @@ int main()
         gamecase();
         break;
     case '4':
-        exitcase();
+        system("cls");
+        cout << "\n\n[+] Вы вышли из игры";
+        _getch();
+        exit(0);
         break;
     }
     return 0;
@@ -106,20 +197,15 @@ void nastroykicase()
         do {
             cout << "[+] Выберете нужный вам пункт:";
             cin >> num0;
-            if (num0 != '1' && num0 != '2' && num0 != '3') {
+            if (num0 != '1' && num0 != '2' && num0 != '3')
                 cout << endl << "[!] Вы ввели некорректные данные!" << endl;
-            }
         } while (num0 != '1' && num0 != '2' && num0 != '3');
         if (num0 == '1')
-        {
             difficulty = 10;
-        }
-        else if (num0 == '2') {
+        else if (num0 == '2')
             difficulty = 15;
-        }
-        else if (num0 == '3') {
+        else if (num0 == '3')
             difficulty = 20;
-        }
         nastroykicase();
         break;
     case '2':
@@ -127,23 +213,17 @@ void nastroykicase()
         do {
             cout << "[+] Введите количество жизней (макс 3):";
             cin >> num0;
-            if (num0 != '0' && num0 != '1' && num0 != '2' && num0 != '3') {
+            if (num0 != '0' && num0 != '1' && num0 != '2' && num0 != '3')
                 cout << endl << "[!] Вы ввели некорректные данные!" << endl;
-            }
         } while (num0 != '0' && num0 != '1' && num0 != '2' && num0 != '3');
-        if (num0 == '0') {
+        if (num0 == '0')
             life = 0;
-        }
         else if (num0 == '1')
-        {
             life = 1;
-        }
-        else if (num0 == '2') {
+        else if (num0 == '2')
             life = 2;
-        }
-        else if (num0 == '3') {
+        else if (num0 == '3')
             life = 3;
-        }
         nastroykicase();
         break;
     case '3':
@@ -155,13 +235,10 @@ void nastroykicase()
                 cout << endl << "[!] Вы ввели некорректные данные!" << endl;
             }
         } while (num0 != '0' && num0 != '1');
-        if (num0 == '0') {
+        if (num0 == '0')
             clue = 0;
-        }
         else if (num0 == '1')
-        {
             clue = 1;
-        }
         nastroykicase();
         break;
     case '4':
@@ -170,9 +247,8 @@ void nastroykicase()
         do {
             cout << endl << "[+] Введите ваше время на викторину:";
             cin >> num4;
-            if (num4 < 2 || num4>10) {
+            if (num4 < 2 || num4>10)
                 cout << endl << "[!] Вы ввели некорректные данные!";
-            }
         } while (num4 < 2 || num4>10);
         num1 = num4; //минуты
         num4 = (num4 - num1) * 100; //секунды
@@ -197,25 +273,16 @@ void rulescase()
     system("pause");
     main();
 }
-void exitcase()
-{
-    system("cls");
-    cout << "\n\n[+] Вы вышли из игры";
-    _getch();
-    exit(0);
-}
 void check()
 {
     cout << endl;
     cout << "[+] Жизней осталось: " << life << endl;
     Ending_Time = clock();
     Result_Time = Ending_Time - Beginning_Time;
-    if ((gametime - (Ending_Time / 1000) / 60) > 0 && (gametime - (Ending_Time / 1000)) - (((gametime - (Ending_Time / 1000)) / 60) * 60) > 0) {
+    if ((gametime - (Ending_Time / 1000) / 60) > 0 && (gametime - (Ending_Time / 1000)) - (((gametime - (Ending_Time / 1000)) / 60) * 60) > 0)
         cout << "[+] Времени осталось: " << (gametime - (Ending_Time / 1000)) / 60 << ":" << (gametime - (Ending_Time / 1000)) - (((gametime - (Ending_Time / 1000)) / 60) * 60) << endl;
-    }
-    else {
+    else
         cout << "[+] Времени осталось: 0:0" << endl;
-    }
     system("pause");
     if (Result_Time > gametime * 1000) {
         system("cls");
@@ -231,7 +298,7 @@ void check()
     }
     system("cls");
 }
-void gamecase()          // Игра меню
+void gamecase()        // Игра меню
 {
     srand(time(0));
     system("cls");
@@ -249,619 +316,176 @@ void gamecase()          // Игра меню
             num2 = rand() % 4;
         mas1[num2] = i + 1;
     }
+
     int Beginning_Time = clock();
     for (int i = 0; i < difficulty; i++)
     {                                          //Главный фор
         system("cls");
-        num3 = i + 1;
-        if (mas[i] == 1) {
-            question = "\tКакая команда должна быть после окончания case?";
-            answ1 = "switch";
-            answ2 = "default";
-            answ3 = "break";
-            answ4 = "end";
-            ans3();
+        for (int j = 0;j < 30;j++) //выбор определенного вопроса
+            if (mas[i] == j + 1)
+                num5 = j;
+        cout << "[+] " << i + 1 << " Вопрос:" << endl;
+        cout << Question[num5] << endl << endl;
+        for (int j = 0; j < 4; j++) {         // выведение вариантов в консоль
+            if (mas1[j] == 1) {
+                if (Answers[num5][0] == Correct[num5])
+                    mas2[j] = Correct[num5];
+                cout << "[" << j + 1 << "] " << Answers[num5][0] << endl;
+            }
+            else if (mas1[j] == 2) {
+                if (Answers[num5][1] == Correct[num5])
+                    mas2[j] = Correct[num5];
+                cout << "[" << j + 1 << "] " << Answers[num5][1] << endl;
+            }
+            else if (mas1[j] == 3) {
+                if (Answers[num5][2] == Correct[num5])
+                    mas2[j] = Correct[num5];
+                cout << "[" << j + 1 << "] " << Answers[num5][2] << endl;
+            }
+            else if (mas1[j] == 4) {
+                if (Answers[num5][3] == Correct[num5])
+                    mas2[j] = Correct[num5];
+                cout << "[" << j + 1 << "] " << Answers[num5][3] << endl;
+            }
         }
-        else if (mas[i] == 2) {
-            question = "\tКакую команду мы используем для вывода на консоль?";
-            answ1 = "cin";
-            answ2 = "cout";
-            answ3 = "setw";
-            answ4 = "string";
-            ans2();
-        }
-        else if (mas[i] == 3) {
-            question = "\tКакие знаки используются с командой cin?";
-            answ1 = ">>";
-            answ2 = "||";
-            answ3 = "&&";
-            answ4 = "<<";
-            ans1();
-        }
-        else if (mas[i] == 4) {
-            question = "\tКакие знаки используются с командой cout?";
-            answ1 = ">>";
-            answ2 = "||";
-            answ3 = "&&";
-            answ4 = "<<";
-            ans4();
-        }
-        else if (mas[i] == 5) {
-            question = "\tКакие знаки используются в цикле if для обозначения \"ИЛИ\"?";
-            answ1 = ">>";
-            answ2 = "||";
-            answ3 = "&&";
-            answ4 = "<<";
-            ans2();
-        }
-        else if (mas[i] == 6) {
-            question = "\tКакие знаки используются в цикле if для обозначения \"И\"?";
-            answ1 = ">>";
-            answ2 = "||";
-            answ3 = "&&";
-            answ4 = "<<";
-            ans3();
-        }
-        else if (mas[i] == 7) {
-            question = "\tКакие знаки используются для вывода текста на консоль?";
-            answ1 = "//";
-            answ2 = "\"\"";
-            answ3 = "()";
-            answ4 = "{}";
-            ans2();
-        }
-        else if (mas[i] == 8) {
-            question = "\tКакие знаки используются для комментария в коде?";
-            answ1 = "//";
-            answ2 = "[]";
-            answ3 = "()";
-            answ4 = "{}";
-            ans1();
-        }
-        else if (mas[i] == 9) {
-            question = "\tКакие знаки используются для условия в цикле for?";
-            answ1 = "//";
-            answ2 = "[]";
-            answ3 = "()";
-            answ4 = "{}";
-            ans3();
-        }
-        else if (mas[i] == 10) {
-            question = "\tКакие знаки используются после обозначения условий в цикле for?";
-            answ1 = "//";
-            answ2 = "[]";
-            answ3 = "()";
-            answ4 = "{}";
-            ans4();
-        }
-        else if (mas[i] == 11) {
-            question = "\tКакие знаки используются чтобы обозначить массив?";
-            answ1 = "//";
-            answ2 = "[]";
-            answ3 = "()";
-            answ4 = "{}";
-            ans2();
-        }
-        else if (mas[i] == 12) {
-            question = "\tКакую команду мы используем ввода с консоли?";
-            answ1 = "cin";
-            answ2 = "cout";
-            answ3 = "setw";
-            answ4 = "string";
-            ans1();
-        }
-        else if (mas[i] == 13) {
-            question = "\tКакую команду мы используем для установки ширины поля?";
-            answ1 = "cin";
-            answ2 = "cout";
-            answ3 = "setw";
-            answ4 = "string";
-            ans3();
-        }
-        else if (mas[i] == 14) {
-            question = "\tКакую команду мы используем для вписывания в переменную текст?";
-            answ1 = "cin";
-            answ2 = "cout";
-            answ3 = "setw";
-            answ4 = "string";
-            ans4();
-        }
-        else if (mas[i] == 15) {
-            question = "\tЧто делает команда endl?";
-            answ1 = "Заканчивает программу";
-            answ2 = "Делает пробел";
-            answ3 = "Делает отступ";
-            answ4 = "Переходит на следующую строку";
-            ans4();
-        }
-        else if (mas[i] == 16) {
-            question = "\tЧто делает команда end(0)?";
-            answ1 = "Заканчивает программу";
-            answ2 = "Делает пробел";
-            answ3 = "Делает отступ ";
-            answ4 = "Переходит на следующую строку";
-            ans1();
-        }
-        else if (mas[i] == 17) {
-            question = "\tЧто делает команда \\t?";
-            answ1 = "Заканчивает программу";
-            answ2 = "Делает пробел";
-            answ3 = "Делает отступ";
-            answ4 = "Переходит на следующую строку";
-            ans3();
-        }
-        else if (mas[i] == 18) {
-            question = "\t\"cin<<num1;\"-в чем ошибка?";
-            answ1 = "Должен быть один знак <";
-            answ2 = "Нет такой команды cin";
-            answ3 = "<< повернуты не в ту сторону";
-            answ4 = "точка с запятой не нужна";
-            ans3();
-        }
-        else if (mas[i] == 19) {
-            num1 = i;
-            cout << "[+] " << num3 << " Вопрос:" << endl;
-            question = "\tДля чего используется команда _getch?";
-            answ1 = "Ставит код на паузу";
-            answ2 = "Ставит код на паузу выводя текст при этом";
-            answ3 = "Делает рандомайзер чисел";
-            answ4 = "Используется для времени в коде";
-            ans1();
-        }
-        else if (mas[i] == 20) {
-            question = "\tДля чего используется команда system(\"pause\")?";
-            answ1 = "Ставит код на паузу";
-            answ2 = "Ставит код на паузу выводя текст при этом";
-            answ3 = "Делает рандомайзер чисел";
-            answ4 = "Используется для времени в коде";
-            ans2();
-        }
-        else if (mas[i] == 21) {
-            question = "\tДля чего используется команда system(\"cls\")?";
-            answ1 = "Ставит код на паузу";
-            answ2 = "Очищает консоль";
-            answ3 = "Делает рандомайзер чисел";
-            answ4 = "Используется для времени в коде";
-            ans2();
-        }
-        else if (mas[i] == 22) {
-            question = "\tДля чего используется команда clock()?";
-            answ1 = "Ставит код на паузу";
-            answ2 = "Очищает консоль";
-            answ3 = "Делает рандомайзер чисел";
-            answ4 = "Используется для времени в коде";
-            ans4();
-        }
-        else if (mas[i] == 23) {
-            question = "\tДля чего используется команда rand?";
-            answ1 = "Ставит код на паузу";
-            answ2 = "Очищает консоль";
-            answ3 = "Делает рандомайзер чисел";
-            answ4 = "Локализовывает текст";
-            ans3();
-        }
-        else if (mas[i] == 24) {
-            question = "\tДля чего используется команда setlocale?";
-            answ1 = "Осуществляет выбор пользователя";
-            answ2 = "Прерывает выполнение кода";
-            answ3 = "Делает рандомайзер чисел";
-            answ4 = "Локализовывает текст";
-            ans4();
-        }
-        else if (mas[i] == 25) {
-            question = "\tДля чего используется команда switch?";
-            answ1 = "Осуществляет выбор пользователя";
-            answ2 = "Прерывает выполнение кода";
-            answ3 = "Делает рандомайзер чисел";
-            answ4 = "Локализовывает текст";
-            ans1();
-        }
-        else if (mas[i] == 26) {
-            question = "\tДля чего используется команда break?";
-            answ1 = "Для возращения данных";
-            answ2 = "Прерывает выполнение кода";
-            answ3 = "Делает рандомайзер чисел";
-            answ4 = "Для вывода значений";
-            ans2();
-        }
-        else if (mas[i] == 27) {
-            question = "\tДля чего используется команда return?";
-            answ1 = "Для возращения данных";
-            answ2 = "Прерывает выполнение кода";
-            answ3 = "Делает рандомайзер чисел";
-            answ4 = "Для вывода значений";
-            ans1();
-        }
-        else if (mas[i] == 28) {
-            question = "\tДля чего используется using namespace std?";
-            answ1 = "Для возращения данных";
-            answ2 = "Прерывает выполнение кода";
-            answ3 = "Делает рандомайзер чисел";
-            answ4 = "Для вывода значений";
-            ans4();
-        }
-        else if (mas[i] == 29) {
-            question = "\tКакое полное название колледжа?";
-            answ1 = "Морской Авиомоторный Дорожный Колледж";
-            answ2 = "Московский Автомобильный Дорожный Колледж";
-            answ3 = "Московский Автомобильно Дорожный Колледж";
-            answ4 = "Московский Авиалетный Дорогой Колледж";
-            ans3();
-        }
-        else if (mas[i] == 30) {
-            question = "\tПолное ФИО преподавателя по Системному программированию в 2ИП-1?";
-            answ1 = "Семенова Екатерина Владимировна";
-            answ2 = "Семеновна Елена Викторовна";
-            answ3 = "Семенова Анна Александровна";
-            answ4 = "Семеновна Екатерина Владимировна";
-            ans1();
-        }
+        cout << endl << "[5] Подсказка 50/50" << endl << endl;
+        answnum();
+        if (answer == 5 && clue > 0) {
+            clue--;
+            system("cls");
+            cout << "[+] " << i + 1 << " Вопрос:" << endl;
+            cout << Question[num5] << endl << endl;
+            for (int j = 0; j < 4; j++) {         // выведение вариантов в консоль 50/50
+                if (mas1[j] == 1) {
+                    if (Answers[num5][0] == Correct[num5])
+                        SetConsoleTextAttribute(hConsole, White);
+                    else if (answers == true) {
+                        answers = false;
+                        SetConsoleTextAttribute(hConsole, White);
+                    }
+                    else
+                        SetConsoleTextAttribute(hConsole, Red);
+                    cout << "[" << j + 1 << "] " << Answers[num5][0] << endl;
+                }
+                else if (mas1[j] == 2) {
+                    if (Answers[num5][1] == Correct[num5])
+                        SetConsoleTextAttribute(hConsole, White);
+                    else if (answers == true) {
+                        answers = false;
+                        SetConsoleTextAttribute(hConsole, White);
+                    }
+                    else
+                        SetConsoleTextAttribute(hConsole, Red);
+                    cout << "[" << j + 1 << "] " << Answers[num5][1] << endl;
+                }
+                else if (mas1[j] == 3) {
+                    if (Answers[num5][2] == Correct[num5])
+                        SetConsoleTextAttribute(hConsole, White);
+                    else if (answers == true) {
+                        answers = false;
+                        SetConsoleTextAttribute(hConsole, White);
+                    }
+                    else
+                        SetConsoleTextAttribute(hConsole, Red);
+                    cout << "[" << j + 1 << "] " << Answers[num5][2] << endl;
+                }
+                else if (mas1[j] == 4) {
+                    if (Answers[num5][3] == Correct[num5])
+                        SetConsoleTextAttribute(hConsole, White);
+                    else if (answers == true) {
+                        answers = false;
+                        SetConsoleTextAttribute(hConsole, White);
+                    }
+                    else
+                        SetConsoleTextAttribute(hConsole, Red);
+                    cout << "[" << j + 1 << "] " << Answers[num5][3] << endl;
+                }
+            }
 
+            SetConsoleTextAttribute(hConsole, White);
+            cout << endl << "[5] Подсказка 50/50" << endl << endl;
+            answnum();
+            if (answer == 5) {
+                do {
+                    cout << endl << "[!] Вы не можете использовать подсказку дважды!" << endl;
+                    answnum();
+                } while (answer == 5);
+            }
+        }
+        else if (answer == 5 && clue == 0) {
+        do {
+            cout << endl << endl << "[!] У вас кончились подсказки!"<<endl;
+            answnum();
+        } while (answer == 5);
+        }
+        system("cls");
+        cout << "[+] " << i + 1 << " Вопрос:" << endl;
+        cout << Question[num5] << endl << endl;
+        
+        for (int j = 0; j < 4; j++) {         // выведение вариантов в консоль ответ
+            if (mas1[j] == 1) {
+                if (Answers[num5][0] == Correct[num5])
+                    SetConsoleTextAttribute(hConsole, Green);
+                else
+                    SetConsoleTextAttribute(hConsole, Red);
+                cout << "[" << j + 1 << "] " << Answers[num5][0] << endl;
+            }
+            else if (mas1[j] == 2) {
+                if (Answers[num5][1] == Correct[num5])
+                    SetConsoleTextAttribute(hConsole, Green);
+                else
+                    SetConsoleTextAttribute(hConsole, Red);
+                cout << "[" << j + 1 << "] " << Answers[num5][1] << endl;
+            }
+            else if (mas1[j] == 3) {
+                if (Answers[num5][2] == Correct[num5])
+                    SetConsoleTextAttribute(hConsole, Green);
+                else
+                    SetConsoleTextAttribute(hConsole, Red);
+                cout << "[" << j + 1 << "] " << Answers[num5][2] << endl;
+            }
+            else if (mas1[j] == 4) {
+                if (Answers[num5][3] == Correct[num5])
+                    SetConsoleTextAttribute(hConsole, Green);
+                else
+                    SetConsoleTextAttribute(hConsole, Red);
+                cout << "[" << j + 1 << "] " << Answers[num5][3] << endl;
+             }
+        }
+        SetConsoleTextAttribute(hConsole, White);
+        cout << endl << "[5] Подсказка 50/50" << endl << endl;
+        cout << "Введите ваш ответ:" << answer << endl << endl;
+        for (int j = 0;j < 4;j++) {
+            if (answer == j + 1) {
+                if (mas2[j] == Correct[num5])
+                    cout << "[+] Поздравляем, вы выбрали правильный ответ" << endl << endl;
+                else {
+                    cout << "[+] Вы выбрали неправильный ответ" << endl;
+                    life--;
+                }
+            }
+        }
+        check();
     }
-    system("cls");
-    cout << "[!] Поздравляем! Вы выиграли!" << endl;
-    cout << "      + + + + + + + + + + +\n";
-    cout << "+ + + +                   + + + +\n";
-    cout << "+     +                   +     +\n";
-    cout << "+     +                   +     +\n";
-    cout << "+ +   +                   +   + +\n";
-    cout << "  + + +                   + + +\n";
-    cout << "      +                   +\n";
-    cout << "      + +               + + \n";
-    cout << "        + +           + +\n";
-    cout << "          + +       + +\n";
-    cout << "              +   +\n";
-    cout << "              +   +\n";
-    cout << "              +   +\n";
-    cout << "            + +   + +\n";
-    cout << "          +           +\n";
-    cout << "          + + + + + + +\n";
-    _getch();
+system("cls");
+cout << "[!] Поздравляем! Вы выиграли!" << endl;
+_getch();
 }
 void answnum() {
     do {
         cout << "Введите ваш ответ:";
         cin >> num0;
-        if (num0 != '1' && num0 != '2' && num0 != '3' && num0 != '4' && num0 != '5') {
+        if (num0 != '1' && num0 != '2' && num0 != '3' && num0 != '4' && num0 != '5')
             cout << endl << "[!] Вы ввели некорректные данные!" << endl;
-        }
     } while (num0 != '1' && num0 != '2' && num0 != '3' && num0 != '4' && num0 != '5');
-    if (num0 == '1') {
+    if (num0 == '1')
         answer = 1;
-    }
-    else if (num0 == '2') {
+    else if (num0 == '2')
         answer = 2;
-    }
-    else if (num0 == '3') {
+    else if (num0 == '3')
         answer = 3;
-    }
-    else if (num0 == '4') {
+    else if (num0 == '4')
         answer = 4;
-    }
-    else if (num0 == '5') {
+    else if (num0 == '5')
         answer = 5;
-    }
-}
-void ansfor()
-{
-    cout << "[+] " << num3 << " Вопрос:" << endl;
-    cout << question << endl << endl;
-    for (int i = 0; i < 4; i++) {         // выведение вариантов в консоль
-        if (mas1[i] == 1) {
-            mas2[i] = 1;
-            cout << "[" << i + 1 << "] " << answ1 << endl;
-        }
-        else if (mas1[i] == 2) {
-            mas2[i] = 2;
-            cout << "[" << i + 1 << "] " << answ2 << endl;
-        }
-        else if (mas1[i] == 3) {
-            mas2[i] = 3;
-            cout << "[" << i + 1 << "] " << answ3 << endl;
-        }
-        else if (mas1[i] == 4) {
-            mas2[i] = 4;
-            cout << "[" << i + 1 << "] " << answ4 << endl;
-        }
-    }
-    cout << endl << "[5] Подсказка 50/50" << endl << endl;
-    answnum();
-}
-void ansif()
-{
-    if (answer == 1) {                    //подстраивание ответов
-        answer1 = mas2[0];
-    }
-    else if (answer == 2) {
-        answer1 = mas2[1];
-    }
-    else if (answer == 3) {
-        answer1 = mas2[2];
-    }
-    else if (answer == 4) {
-        answer1 = mas2[3];
-    }
-}
-void ans12() {
-
-    for (int i = 0; i < 4; i++) {                           // выведение вариантов в консоль 50/50 (ответ 12)
-        if (mas1[i] == 1) {
-            mas2[i] = 1;
-            SetConsoleTextAttribute(hConsole, White);
-            cout << "[" << i + 1 << "] " << answ1 << endl;
-        }
-        else if (mas1[i] == 2) {
-            mas2[i] = 2;
-            SetConsoleTextAttribute(hConsole, White);
-            cout << "[" << i + 1 << "] " << answ2 << endl;
-        }
-        else if (mas1[i] == 3) {
-            mas2[i] = 3;
-            SetConsoleTextAttribute(hConsole, Red);
-            cout << "[" << i + 1 << "] " << answ3 << endl;
-        }
-        else if (mas1[i] == 4) {
-            mas2[i] = 4;
-            SetConsoleTextAttribute(hConsole, Red);
-            cout << "[" << i + 1 << "] " << answ4 << endl;
-        }
-    }
-    SetConsoleTextAttribute(hConsole, White);
-    cout << endl << "[5] Подсказка 50/50" << endl << endl;
-    answnum();
-    if (answer == 5) {
-        do {
-            cout << endl << "[!] Вы не можете использовать подсказку дважды!" << endl;
-            answnum();
-        } while (answer == 5);
-    }
-}
-void ans34() {
-
-    for (int i = 0; i < 4; i++) {                           // выведение вариантов в консоль 50/50 (ответ 34)
-        if (mas1[i] == 1) {
-            mas2[i] = 1;
-            SetConsoleTextAttribute(hConsole, Red);
-            cout << "[" << i + 1 << "] " << answ1 << endl;
-        }
-        else if (mas1[i] == 2) {
-            mas2[i] = 2;
-            SetConsoleTextAttribute(hConsole, Red);
-            cout << "[" << i + 1 << "] " << answ2 << endl;
-        }
-        else if (mas1[i] == 3) {
-            mas2[i] = 3;
-            SetConsoleTextAttribute(hConsole, White);
-            cout << "[" << i + 1 << "] " << answ3 << endl;
-        }
-        else if (mas1[i] == 4) {
-            mas2[i] = 4;
-            SetConsoleTextAttribute(hConsole, White);
-            cout << "[" << i + 1 << "] " << answ4 << endl;
-        }
-    }
-    SetConsoleTextAttribute(hConsole, White);
-    cout << endl << "[5] Подсказка 50/50" << endl << endl;
-    answnum();
-    if (answer == 5) {
-        do {
-            cout << endl << "[!] Вы не можете использовать подсказку дважды!" << endl;
-            answnum();
-        } while (answer == 5);
-    }
-}
-void ans1() {
-    ansfor();
-    if (answer == 5 && clue > 0) {
-        clue--;
-        system("cls");
-        cout << "[+] " << num3 << " Вопрос:" << endl;
-        cout << question << endl << endl;
-        ans12();
-    }
-    else if (answer == 5 && clue == 0) {
-        do {
-            cout << endl << endl << "[!] У вас кончились подсказки! Введите свой ответ:";
-            answnum();
-        } while (answer == 5);
-    }
-    system("cls");
-    cout << "[+] " << num3 << " Вопрос:" << endl;
-    cout << question << endl << endl;
-    ansif();
-    for (int i = 0; i < 4; i++) {         // выведение вариантов в консоль (ответ 1)
-        if (mas1[i] == 1) {
-            mas2[i] = 1;
-            SetConsoleTextAttribute(hConsole, Green);
-            cout << "[" << i + 1 << "] " << answ1 << endl;
-        }
-        else if (mas1[i] == 2) {
-            mas2[i] = 2;
-            SetConsoleTextAttribute(hConsole, Red);
-            cout << "[" << i + 1 << "] " << answ2 << endl;
-        }
-        else if (mas1[i] == 3) {
-            mas2[i] = 3;
-            SetConsoleTextAttribute(hConsole, Red);
-            cout << "[" << i + 1 << "] " << answ3 << endl;
-        }
-        else if (mas1[i] == 4) {
-            mas2[i] = 4;
-            SetConsoleTextAttribute(hConsole, Red);
-            cout << "[" << i + 1 << "] " << answ4 << endl;
-        }
-    }
-    SetConsoleTextAttribute(hConsole, White);
-    cout << endl << "[5] Подсказка 50/50" << endl << endl;
-    cout << "Введите ваш ответ:" << answer << endl << endl;
-    if (answer1 == 1) {
-        cout << "[+] Поздравляем, вы выбрали правильный ответ" << endl << endl;
-    }
-    else {
-        cout << "[+] Вы выбрали неправильный ответ" << endl;
-        life--;
-    }
-    check();
-}
-void ans2()
-{
-    ansfor();
-    if (answer == 5 && clue > 0) {
-        clue--;
-        system("cls");
-        cout << "[+] " << num3 << " Вопрос:" << endl;
-        cout << question << endl << endl;
-        ans12();
-    }
-    else if (answer == 5 && clue == 0) {
-        do {
-            cout << endl << endl << "[!] У вас кончились подсказки! Введите свой ответ:";
-            answnum();
-        } while (answer == 5);
-    }
-    system("cls");
-    cout << "[+] " << num3 << " Вопрос:" << endl;
-    cout << question << endl << endl;
-    ansif();
-    for (int i = 0; i < 4; i++) {         // выведение вариантов в консоль (ответ 2)
-        if (mas1[i] == 1) {
-            mas2[i] = 1;
-            SetConsoleTextAttribute(hConsole, Red);
-            cout << "[" << i + 1 << "] " << answ1 << endl;
-        }
-        else if (mas1[i] == 2) {
-            mas2[i] = 2;
-            SetConsoleTextAttribute(hConsole, Green);
-            cout << "[" << i + 1 << "] " << answ2 << endl;
-        }
-        else if (mas1[i] == 3) {
-            mas2[i] = 3;
-            SetConsoleTextAttribute(hConsole, Red);
-            cout << "[" << i + 1 << "] " << answ3 << endl;
-        }
-        else if (mas1[i] == 4) {
-            mas2[i] = 4;
-            SetConsoleTextAttribute(hConsole, Red);
-            cout << "[" << i + 1 << "] " << answ4 << endl;
-        }
-    }
-    SetConsoleTextAttribute(hConsole, White);
-    cout << endl << "[5] Подсказка 50/50" << endl << endl;
-    cout << "Введите ваш ответ:" << answer << endl << endl;
-    if (answer1 == 2) {
-        cout << "[+] Поздравляем, вы выбрали правильный ответ" << endl << endl;
-    }
-    else {
-        cout << "[+] Вы выбрали неправильный ответ" << endl;
-        life--;
-    }
-    check();
-}
-void ans3()
-{
-    ansfor();
-    if (answer == 5 && clue > 0) {
-        clue--;
-        system("cls");
-        cout << "[+] " << num3 << " Вопрос:" << endl;
-        cout << question << endl << endl;
-        ans34();
-    }
-    else if (answer == 5 && clue == 0) {
-        do {
-            cout << endl << endl << "[!] У вас кончились подсказки! Введите свой ответ:";
-            answnum();
-        } while (answer == 5);
-    }
-    system("cls");
-    cout << "[+] " << num3 << " Вопрос:" << endl;
-    cout << question << endl << endl;
-    ansif();
-    for (int i = 0; i < 4; i++) {         // выведение вариантов в консоль (ответ 3)
-        if (mas1[i] == 1) {
-            mas2[i] = 1;
-            SetConsoleTextAttribute(hConsole, Red);
-            cout << "[" << i + 1 << "] " << answ1 << endl;
-        }
-        else if (mas1[i] == 2) {
-            mas2[i] = 2;
-            SetConsoleTextAttribute(hConsole, Red);
-            cout << "[" << i + 1 << "] " << answ2 << endl;
-        }
-        else if (mas1[i] == 3) {
-            mas2[i] = 3;
-            SetConsoleTextAttribute(hConsole, Green);
-            cout << "[" << i + 1 << "] " << answ3 << endl;
-        }
-        else if (mas1[i] == 4) {
-            mas2[i] = 4;
-            SetConsoleTextAttribute(hConsole, Red);
-            cout << "[" << i + 1 << "] " << answ4 << endl;
-        }
-    }
-    SetConsoleTextAttribute(hConsole, White);
-    cout << endl << "[5] Подсказка 50/50" << endl << endl;
-    cout << "Введите ваш ответ:" << answer << endl << endl;
-    if (answer1 == 3) {
-        cout << "[+] Поздравляем, вы выбрали правильный ответ" << endl << endl;
-    }
-    else {
-        cout << "[+] Вы выбрали неправильный ответ" << endl;
-        life--;
-    }
-    check();
-}
-void ans4() {
-    ansfor();
-    if (answer == 5 && clue > 0) {
-        clue--;
-        system("cls");
-        cout << "[+] " << num3 << " Вопрос:" << endl;
-        cout << question << endl << endl;
-        ans34();
-    }
-    else if (answer == 5 && clue == 0) {
-        do {
-            cout << endl << endl << "[!] У вас кончились подсказки! Введите свой ответ:";
-            answnum();
-        } while (answer == 5);
-    }
-    system("cls");
-    cout << "[+] " << num3 << " Вопрос:" << endl;
-    cout << question << endl << endl;
-    ansif();
-    for (int i = 0; i < 4; i++) {         // выведение вариантов в консоль (ответ 4)
-        if (mas1[i] == 1) {
-            mas2[i] = 1;
-            SetConsoleTextAttribute(hConsole, Red);
-            cout << "[" << i + 1 << "] " << answ1 << endl;
-        }
-        else if (mas1[i] == 2) {
-            mas2[i] = 2;
-            SetConsoleTextAttribute(hConsole, Red);
-            cout << "[" << i + 1 << "] " << answ2 << endl;
-        }
-        else if (mas1[i] == 3) {
-            mas2[i] = 3;
-            SetConsoleTextAttribute(hConsole, Red);
-            cout << "[" << i + 1 << "] " << answ3 << endl;
-        }
-        else if (mas1[i] == 4) {
-            mas2[i] = 4;
-            SetConsoleTextAttribute(hConsole, Green);
-            cout << "[" << i + 1 << "] " << answ4 << endl;
-
-        }
-    }
-    SetConsoleTextAttribute(hConsole, White);
-    cout << endl << "[5] Подсказка 50/50" << endl << endl;
-    cout << "Введите ваш ответ:" << answer << endl << endl;
-    if (answer1 == 4) {
-        cout << "[+] Поздравляем, вы выбрали правильный ответ" << endl << endl;
-    }
-    else {
-        cout << "[+] Вы выбрали неправильный ответ" << endl;
-        life--;
-    }
-    check();
 }
